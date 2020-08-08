@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+  	<title>Admin Panel</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="{{ url_for ('static', filename='css/style.css')}}">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css" />
+		<link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css"/>
+		<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.4/css/responsive.bootstrap4.min.css"/>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  </head>
+  <body>
+
+		<div class="wrapper d-flex align-items-stretch">
+			<nav id="sidebar">
+                <div class="pt-4 pl-4">
+                    <h2>{{params['blogname']}}</h2>
+                </div>
+				<div class="pl-4 pr-4">
+                    <ul class="list-unstyled components mb-5">
+                        <li class="">
+                          <a href="/dashboard/index">Home</a>
+                        </li>
+                      <li class="">
+                        <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Posts</a>
+                        <ul class="collapse list-unstyled" id="homeSubmenu">
+                        <li class="text-center">
+                            <a href="/dashboard/add"><i class="fa fa-plus mr-2"></i>Add New Post</a>
+                        </li>
+                        </ul>
+                      </li>
+                      <li>
+                          <a href="#">Logout</a>
+                      </li>
+                    </ul>
+
+	        <div class="footer">
+	        	<p>
+                  Copyright &copy;<script>document.write(new Date().getFullYear());</script> My Blog
+                </p>
+	        </div>
+
+	      </div>
+    	</nav>
+
+        <!-- Page Content  -->
+      <div id="content" class="p-2 p-md-3">
+
+        <nav class="navbar mb-3 navbar-dark bg-info">
+          <div class="container-fluid">
+              <button type="button" id="sidebarCollapse" class="btn btn-primary">
+              <i class="fa fa-bars"></i>
+              <span class="sr-only">Toggle Menu</span>
+            </button>
+              <a class="navbar-brand" href="javascript:void(0)">My Blog Admin</a>
+          </div>
+        </nav>
+
+        {% block body %}
+
+        {% endblock %}
+      </div>
+      </div>
+
+    <script src="{{ url_for ('static',filename='js/jquery.min.js')}}"></script>
+    <script src="{{ url_for ('static',filename='js/popper.js')}}"></script>
+    <script src="{{ url_for ('static',filename='js/bootstrap.min.js')}}"></script>
+    <script src="{{ url_for ('static',filename='js/main.js')}}"></script>
+    <script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.4/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.4/js/responsive.bootstrap4.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#DT').DataTable();
+            $('#postTitle').on('keyup',function(){
+                var title = $(this).val();
+                $('#postSlug').val(convertToSlug(title));
+            });
+            function convertToSlug(Text){
+                return Text.toLowerCase().replace(/ /g,'-').replace(/[^\w-]+/g,'');
+            }
+        });
+    </script>
+  </body>
+</html>

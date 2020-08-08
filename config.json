@@ -1,0 +1,14 @@
+{
+  "params": {
+    "localserver": "True",
+    "databaseurl": "mysql+mysqlconnector://root:@localhost/mywebsite",
+    "productionurl": "",
+    "fburl": "https://facebook.com/udaipurblog",
+    "twitterurl": "https://twitter.com/dishant",
+    "githuburl": "https://github.com/dishant888",
+    "gmailusername": "dishantsukhwal10@gmail.com",
+    "gmailpassword": "",
+    "blogname": "My Blog",
+    "tagline": "Learning flask"
+  }
+}

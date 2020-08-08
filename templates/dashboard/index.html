@@ -1,0 +1,56 @@
+{% extends 'dashboard/layout.html' %}
+{% block body %}
+
+<main class='container-fluid'>
+    <div class='row'>
+        <div class='col-12'>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for class,message in messages %}
+                <script>
+                    swal({ title:'{{message}}', icon:'{{class}}' });
+                </script>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+            <div class='card p-1'>
+                <div class='card-header'>
+                  <span class="h2">All Posts</span>
+                    <a href="/dashboard/add" class='btn btn-outline-primary float-right' >Add New Post</a>
+                </div>
+                <div class="card-body">
+                    <table id="DT" class='table table-striped dt-responsive nowrap' style="width:100%">
+                        <thead class='text-dark text-center'>
+                          <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody id='college_tbody' class='text-center'>
+                         {% for post in posts %}
+                          <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ post.title[:30] }}</td>
+                            <td>{{ post.description[:12] }}...</td>
+                            <td>{{ post.date }}</td>
+                            <td>
+                                <a class="btn btn-sm btn-outline-info" href="/dashboard/edit/{{post.s_no}}">
+                                  <i class='fa fa-edit' data-toggle="tooltip" title="Edit"></i>
+                                </a>
+                                <a onclick="return confirm('Are you sure ?')" class="btn btn-sm btn-outline-danger" href="/dashboard/delete/{{post.s_no}}" >
+                                  <i class='fa fa-trash-o' data-toggle="tooltip" title="Delete" ></i>
+                                </a>
+                            </td>
+                          </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
