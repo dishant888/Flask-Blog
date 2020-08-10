@@ -13,6 +13,7 @@
 		<link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css"/>
 		<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.4/css/responsive.bootstrap4.min.css"/>
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+      <script src="https://cdn.ckeditor.com/ckeditor5/21.0.0/classic/ckeditor.js"></script>
   </head>
   <body>
 
@@ -78,6 +79,7 @@
     <script>
         $(document).ready(function(){
             $('#DT').DataTable();
+
             $('#postTitle').on('keyup',function(){
                 var title = $(this).val();
                 $('#postSlug').val(convertToSlug(title));
@@ -87,5 +89,15 @@
             }
         });
     </script>
+  <script>
+    ClassicEditor
+    .create( document.querySelector( '#textEditor' ) )
+    .then( editor => {
+        console.log( editor );
+    } )
+    .catch( error => {
+        console.error( error );
+    } );
+  </script>
   </body>
 </html>

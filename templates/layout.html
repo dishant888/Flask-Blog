@@ -20,7 +20,24 @@
 
   <!-- Custom styles for this template -->
   <link href="{{ url_for ('static', filename='/css/clean-blog.min.css') }}" rel="stylesheet">
+  <style>
+    .sidebar-box {
+      max-height: 180px;
+      position: relative;
+      overflow: hidden;
+    }
+    .sidebar-box .read-more {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      margin: 0; padding: 30px 0;
 
+      /* "transparent" only works here because == rgba(0,0,0,0) */
+      background-image: linear-gradient(to bottom, transparent, white);
+    }
+  </style>
 </head>
 
 <body>
@@ -40,9 +57,6 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/about">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/post">Post</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/contact">Contact</a>

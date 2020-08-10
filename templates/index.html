@@ -1,44 +1,28 @@
 {% extends "layout.html" %}
 {% block body %}
+
 <!-- Main Content -->
   <div class="container">
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
-
-        <table class="table table-striped text-center shadow">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Title</th>
-              <th>Description</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-          <tbody>
-          {% for post in posts %}
-            <tr>
-              <td>{{ loop.index }}</td>
-              <td><a href="post/{{post.slug}}">{{ post.title[:30] }}</a></td>
-              <td>{{ post.description[:12] }}...</td>
-              <td>{{ post.date }}</td>
-            </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-
-<!--          <div class="post-preview">-->
-<!--              <h2 class="post-title">-->
-<!--              </h2>-->
-<!--            </a>-->
-<!--            <div>-->
-<!--              <p>-->
-<!--              </p>-->
-<!--            </div>-->
-<!--            <p class="post-meta">Posted by-->
-<!--          </div>-->
-<!--          <hr>-->
-
-
+        {% for post in posts %}
+        <div class="post-preview">
+            <a href="/post/{{post.slug}}">
+              <h3>
+                {{post.title}}
+              </h3>
+            </a>
+            <div class="sidebar-box">
+              <p>
+                {{post.description}}
+              </p>
+                <p class="read-more"></p>
+            </div>
+            <a href="/post/{{post.slug}}" class="button read-more-a float-right">Read More...</a>
+            <p class="post-meta">Posted on {{post.date}}
+          </div>
+          <hr>
+        {% endfor %}
         <!-- Pager -->
         <div class="clearfix">
           <a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>
