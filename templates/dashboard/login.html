@@ -9,7 +9,7 @@
     <title>Signin Template · Bootstrap</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/sign-in/">
-
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <!-- Bootstrap core CSS -->
 <link href="https://getbootstrap.com/docs/4.5/dist/css/bootstrap.min.css" rel="stylesheet" >
 
@@ -34,6 +34,15 @@
     <link href="https://getbootstrap.com/docs/4.5/examples/sign-in/signin.css" rel="stylesheet">
   </head>
   <body class="text-center">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for class,message in messages %}
+        <script>
+            swal({ title:'{{message}}', icon:'{{class}}' });
+        </script>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
     <form class="form-signin" action="/dashboard" method="POST">
       <img class="mb-4" src="{{ url_for ('static', filename='img/bootstrap-solid.svg') }}" alt="" width="72" height="72">
       <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>

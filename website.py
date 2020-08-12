@@ -3,6 +3,8 @@ from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 import json
 from flask_mail import Mail
+import os
+from werkzeug.utils import secure_filename
 
 with open('config.json','r') as c:
     params = json.load(c)['params']
@@ -44,6 +46,7 @@ class Contact(db.Model):
 class Login(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(50))
+    name = db.Column(db.String(50))
     password = db.Column(db.String(50))
 
 @app.context_processor
@@ -92,22 +95,36 @@ def login():
         password = request.form.get('password')
         user = Login.query.filter_by(email=email,password=password).first()
         if user == None:
-            # session['adminEmail'] = ''
-            # session['adminName'] = ''
+            session['adminEmail'] = ''
+            session['adminName'] = ''
             return render_template('dashboard/login.html', params=params,error='Invalid Credentials')
         else:
-            # session['adminEmail'] = user.email
-            # session['adminName'] = user.name
+            session['adminEmail'] = user.email
+            session['adminName'] = user.name
             return redirect('/dashboard/index')
     return render_template('dashboard/login.html',params=params)
 
+@app.route('/dashboard/logout',methods=['POST','GET'])
+def logout():
+    session.pop('adminEmail')
+    session.pop('adminName')
+    return redirect ('/dashboard')
+
 @app.route('/dashboard/index')
 def dashboardIndex():
+    if 'adminEmail' not in session:
+        flash('Unauthorized Access denied','error')
+        return redirect('/dashboard')
+
     posts = Posts.query.filter_by().all()
-    return render_template('dashboard/index.html',params=params,posts=posts)
+    return render_template('dashboard/index.html', params=params, posts=posts)
 
 @app.route('/dashboard/edit/<string:post_id>',methods=['GET','POST'])
 def editPost(post_id):
+    if 'adminEmail' not in session:
+        flash('Unauthorized Access denied', 'error')
+        return redirect('/dashboard')
+
     post = Posts.query.filter_by(s_no=post_id).first()
     if request.method == 'POST':
         post.title = request.form.get('title')
@@ -122,6 +139,10 @@ def editPost(post_id):
 
 @app.route('/dashboard/add',methods=['GET','POST'])
 def addPost():
+    if 'adminEmail' not in session:
+        flash('Unauthorized Access denied', 'error')
+        return redirect('/dashboard')
+
     if request.method == 'POST':
         title = request.form.get('title')
         slug = request.form.get('slug')
@@ -137,9 +158,26 @@ def addPost():
 
 @app.route('/dashboard/delete/<string:post_id>',methods=['GET','POST'])
 def deletePost(post_id):
+    if 'adminEmail' not in session:
+        flash('Unauthorized Access denied', 'error')
+        return redirect('/dashboard')
+
     db.session.delete(Posts.query.get(post_id))
     db.session.commit()
     flash('Successfully Deleted Post', 'success')
     return redirect('/dashboard/index')
+
+@app.route('/dashboard/uploader',methods=['POST','GET'])
+def uploader():
+    if 'adminEmail' not in session:
+        flash('Unauthorized Access denied', 'error')
+        return redirect('/dashboard')
+
+    if request.method == 'POST':
+        f = request.files['file1']
+        # print(f.filename)
+        f.save(os.path.join('C:\\Users\\user\\PycharmProjects\\myFlaskWebsite\\static\\img\\uploads',secure_filename(f.filename)))
+        flash('File Uploaded Successfully','success')
+        return redirect('/dashboard/index')
 
 app.run(debug=True)

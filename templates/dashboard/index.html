@@ -17,6 +17,10 @@
                 <div class='card-header'>
                   <span class="h2">All Posts</span>
                     <a href="/dashboard/add" class='btn btn-outline-primary float-right' >Add New Post</a>
+                    <form action="/dashboard/uploader" method="POST" enctype="multipart/form-data">
+                        <input type="file" name="file1"/>
+                        <input type="submit" class="btn btn-success"/>
+                    </form>
                 </div>
                 <div class="card-body">
                     <table id="DT" class='table table-striped dt-responsive nowrap' style="width:100%">
