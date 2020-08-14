@@ -1,3 +1,4 @@
+import math
 from flask import Flask, render_template, request, redirect, session, flash, Markup
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
@@ -53,10 +54,12 @@ class Login(db.Model):
 def inject_year():
     return {'year': datetime.now().year}
 
-@app.route('/')
-def index():
-    posts = Posts.query.filter_by().all()
-    for post in posts:
+@app.route('/', methods=['GET'], defaults={"page": 1})
+@app.route('/<int:page>', methods=['GET'])
+def index(page):
+    per_page = 5
+    posts = Posts.query.order_by(Posts.s_no.desc()).paginate(page,per_page,error_out=False)
+    for post in posts.items:
         post.description = Markup(post.description)
     return render_template('index.html',image='home-bg.jpg',params=params,posts=posts)
 

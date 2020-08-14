@@ -2,10 +2,10 @@
 {% block body %}
 
 <!-- Main Content -->
-  <div class="container">
+<div class="container">
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
-        {% for post in posts %}
+    {% for post in posts.items %}
         <div class="post-preview">
             <a href="/post/{{post.slug}}">
               <h3>
@@ -22,12 +22,16 @@
             <p class="post-meta">Posted on {{post.date}}
           </div>
           <hr>
-        {% endfor %}
-        <!-- Pager -->
-        <div class="clearfix">
-          <a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>
+    {% endfor %}
+          <div class="clearfix">
+              {% if posts.has_next %}
+              <a class="btn btn-primary float-right" href="{{ url_for('index', page=posts.next_num) }}">Older Posts &rarr;</a>
+              {% endif %}
+              {% if posts.has_prev %}
+              <a class="btn btn-primary float-left" href="{{ url_for('index', page=posts.prev_num) }}">&larr; New Posts</a>
+              {% endif %}
         </div>
       </div>
     </div>
-  </div>
+</div>
 {% endblock %}
