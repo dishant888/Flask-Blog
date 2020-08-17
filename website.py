@@ -1,4 +1,3 @@
-import math
 from flask import Flask, render_template, request, redirect, session, flash, Markup
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
@@ -6,6 +5,15 @@ import json
 from flask_mail import Mail
 import os
 from werkzeug.utils import secure_filename
+
+def check_loggedIn(func):
+    def wrapper(*args,**kwargs):
+        if 'adminEmail' not in session:
+            flash('Unauthorized Access denied', 'error')
+            return redirect('/dashboard')
+        return func(*args, **kwargs)
+    wrapper.__name__ = func.__name__
+    return wrapper
 
 with open('config.json','r') as c:
     params = json.load(c)['params']
@@ -114,20 +122,14 @@ def logout():
     return redirect ('/dashboard')
 
 @app.route('/dashboard/index')
+@check_loggedIn
 def dashboardIndex():
-    if 'adminEmail' not in session:
-        flash('Unauthorized Access denied','error')
-        return redirect('/dashboard')
-
     posts = Posts.query.filter_by().all()
     return render_template('dashboard/index.html', params=params, posts=posts)
 
 @app.route('/dashboard/edit/<string:post_id>',methods=['GET','POST'])
+@check_loggedIn
 def editPost(post_id):
-    if 'adminEmail' not in session:
-        flash('Unauthorized Access denied', 'error')
-        return redirect('/dashboard')
-
     post = Posts.query.filter_by(s_no=post_id).first()
     if request.method == 'POST':
         post.title = request.form.get('title')
@@ -141,11 +143,8 @@ def editPost(post_id):
     return render_template('dashboard/edit.html',post=post,params=params)
 
 @app.route('/dashboard/add',methods=['GET','POST'])
+@check_loggedIn
 def addPost():
-    if 'adminEmail' not in session:
-        flash('Unauthorized Access denied', 'error')
-        return redirect('/dashboard')
-
     if request.method == 'POST':
         title = request.form.get('title')
         slug = request.form.get('slug')
@@ -160,22 +159,16 @@ def addPost():
     return render_template('dashboard/add.html',params=params)
 
 @app.route('/dashboard/delete/<string:post_id>',methods=['GET','POST'])
+@check_loggedIn
 def deletePost(post_id):
-    if 'adminEmail' not in session:
-        flash('Unauthorized Access denied', 'error')
-        return redirect('/dashboard')
-
     db.session.delete(Posts.query.get(post_id))
     db.session.commit()
     flash('Successfully Deleted Post', 'success')
     return redirect('/dashboard/index')
 
 @app.route('/dashboard/uploader',methods=['POST','GET'])
+@check_loggedIn
 def uploader():
-    if 'adminEmail' not in session:
-        flash('Unauthorized Access denied', 'error')
-        return redirect('/dashboard')
-
     if request.method == 'POST':
         f = request.files['file1']
         # print(f.filename)
